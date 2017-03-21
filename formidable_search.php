@@ -36,6 +36,7 @@ if ( ! class_exists( 'formidable_search' ) ) {
 		 */
 		private function __construct() {
 			define( 'FSE_BASE_FILE', trailingslashit( str_replace( "\\", "/", plugin_dir_path( __FILE__ ) ) ) . 'formidable_search.php' );
+			define( 'FSE_JS_PATH', plugin_dir_url( __FILE__ ) . 'assets/js/' );
 			define( 'FSE_VIEW_PATH', dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR );
 			define( 'FSE_CLASSES_PATH', dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR );
 			define( 'FSE_INCLUDES_PATH', dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR );

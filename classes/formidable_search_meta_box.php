@@ -1,11 +1,11 @@
 <?php
 /**
- * @package WordPress
+ * @package    WordPress
  * @subpackage Formidable, formidable_search
- * @author GFireM
- * @copyright 2017
- * @link http://www.gfirem.com
- * @license http://www.apache.org/licenses/
+ * @author     GFireM
+ * @copyright  2017
+ * @link       http://www.gfirem.com
+ * @license    http://www.apache.org/licenses/
  */
 
 if ( ! defined( 'WPINC' ) ) {
@@ -108,8 +108,7 @@ class formidable_search_meta_box {
 	public function add_script() {
 		global $current_screen;
 		if ( $current_screen->id == 'frm_display' ) {
-			$base_url = plugin_dir_url( __FILE__ ) . 'assets/';
-			wp_enqueue_script( 'formidable_search', $base_url . 'js/formidable_search.js', array( "jquery" ), $this->version, true );
+			wp_enqueue_script( 'formidable_search', FSE_JS_PATH . 'formidable_search.js', array( "jquery" ), $this->version, true );
 		}
 	}
 	
