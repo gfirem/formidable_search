@@ -126,7 +126,7 @@ class formidable_search_meta_box {
 							$field_search_value = esc_attr( $_GET[ $field_term['where'] ] );
 							$type               = FrmField::get_type( $field_key );
 							if ( in_array( $type, $single_line ) ) {
-								$where_array[ $field_key ] = " (meta_value like '%" . $field_search_value . "%' and fi.id = " . $field_key . ") ";
+								$where_array[ $field_key ] = " (it.meta_value like '%" . $field_search_value . "%' and it.field_id = " . $field_key . ") ";
 							} else {
 								$options   = $this->get_array_of_options( $field_search_value );
 								$b         = 1;
@@ -135,18 +135,19 @@ class formidable_search_meta_box {
 									if ( $b > 1 ) {
 										$where_str .= ' OR ';
 									}
-									$where_str .= " (meta_value like '%" . trim( $option ) . "%' and fi.id = " . $field_key . ") ";
+									$where_str .= " (it.meta_value like '%" . trim( $option ) . "%' and it.field_id = " . $field_key . ") ";
 									$b ++;
 								}
-								$where_array[ $field_key ] = $where_str;
+								$where_array[ $field_key ] = ( $b > 2 ) ? ' ( ' . $where_str . ' ) ' : $where_str;
 							}
 						}
 					}
 					if ( ! empty( $where_array ) ) {
-						$i         = 1;
+						$i = 1;
+						global $wpdb;
 						$where_str = '';
 						foreach ( $where_array as $field_key => $field_term ) {
-							$where_str .= ' ' . $field_term . ' ';
+							$where_str .= '  ( it.item_id IN(SELECT DISTINCT it.item_id FROM ' . $wpdb->get_blog_prefix() . 'frm_item_metas it WHERE ' . $field_term . ' ' . FrmAppHelper::prepend_and_or_where( ' AND ', array( 'item_id' => $args['entry_ids'] ) ) . ' ) ) ';
 							if ( $i != count( $where_array ) ) {
 								$where_str .= $data_encoded[ $field_key ]['filter'];
 							}
