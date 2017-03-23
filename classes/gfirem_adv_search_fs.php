@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    WordPress
- * @subpackage Formidable, formidable_search
+ * @subpackage Formidable, gfirem_adv_search
  * @author     GFireM
  * @copyright  2017
  * @link       http://www.gfirem.com
@@ -12,7 +12,7 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-class formidable_search_fs {
+class gfirem_adv_search_fs {
 	
 	/**
 	 * Instance of this class.
@@ -22,27 +22,27 @@ class formidable_search_fs {
 	protected static $instance = null;
 	
 	public function __construct() {
-		$this->formidable_search_fs();
+		$this->gfirem_adv_search_fs();
 	}
 	
 	/**
 	 * @return Freemius
 	 */
 	public static function getFreemius() {
-		global $formidable_search_fs;
+		global $gfirem_adv_search_fs;
 		
-		return $formidable_search_fs;
+		return $gfirem_adv_search_fs;
 	}
 	
 	// Create a helper function for easy SDK access.
-	public function formidable_search_fs() {
-		global $formidable_search_fs;
+	public function gfirem_adv_search_fs() {
+		global $gfirem_adv_search_fs;
 		
-		if ( ! isset( $formidable_search_fs ) ) {
+		if ( ! isset( $gfirem_adv_search_fs ) ) {
 			// Include Freemius SDK.
 			require_once dirname( __FILE__ ) . '/../includes/freemius/start.php';
 			
-			$formidable_search_fs = fs_dynamic_init( array(
+			$gfirem_adv_search_fs = fs_dynamic_init( array(
 				'id'             => '906',
 				'slug'           => 'formidable_search',
 				'type'           => 'plugin',
@@ -59,7 +59,7 @@ class formidable_search_fs {
 			) );
 		}
 		
-		return $formidable_search_fs;
+		return $gfirem_adv_search_fs;
 	}
 	
 	/**

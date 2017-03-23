@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    WordPress
- * @subpackage Formidable, formidable_search
+ * @subpackage Formidable, gfirem_adv_search
  * @author     GFireM
  * @copyright  2017
  * @link       http://www.gfirem.com
@@ -12,7 +12,7 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-class formidable_search_meta_box {
+class gfirem_adv_search_meta_box {
 	
 	private $version = '1.0.0';
 	
@@ -31,9 +31,9 @@ class formidable_search_meta_box {
 	 */
 	public function add_meta_boxes( $post ) {
 		add_meta_box(
-			'formidable_search_meta_box',
-			__( 'Advance Search Filter', 'formidable_search' ),
-			array( $this, 'formidable_search_meta_box_callback' ),
+			'gfirem_adv_search_meta_box',
+			__( 'Advance Search Filter', 'gfirem_adv_search-locale' ),
+			array( $this, 'gfirem_adv_search_meta_box_callback' ),
 			'frm_display', 'side'
 		);
 	}
@@ -43,7 +43,7 @@ class formidable_search_meta_box {
 	 *
 	 * @param $post WP_Post
 	 */
-	public function formidable_search_meta_box_callback( $post ) {
+	public function gfirem_adv_search_meta_box_callback( $post ) {
 		$enabled_adv_filtering = get_post_meta( $post->ID, '_enabled_adv_filtering', true );
 		$show_adv_view         = '';
 		if ( empty( $enabled_adv_filtering ) ) {
@@ -53,7 +53,7 @@ class formidable_search_meta_box {
 			$enabled_adv_filtering = '1';
 		}
 		$display      = FrmProDisplay::getOne( $post->ID, false, true );
-		$data_encoded = get_post_meta( $post->ID, '_formidable_search_collect_setting', true );
+		$data_encoded = get_post_meta( $post->ID, '_gfirem_adv_search_collect_setting', true );
 		$filters      = array();
 		if ( ! empty( $data_encoded ) ) {
 			$filters = $data_encoded;
@@ -67,7 +67,7 @@ class formidable_search_meta_box {
 	 * @param int $post_id The post ID.
 	 */
 	function save_meta_boxes_data( $post_id ) {
-		if ( ! wp_verify_nonce( $_POST['formidable_search_metabox_nonce'], 'formidable_search_metabox_collect_settings' ) ) {
+		if ( ! wp_verify_nonce( $_POST['gfirem_adv_search_metabox_nonce'], 'gfirem_adv_search_metabox_collect_settings' ) ) {
 			return;
 		}
 		
@@ -81,7 +81,7 @@ class formidable_search_meta_box {
 		
 		if ( ! isset( $_POST['frm_search_enabled'] ) ) {
 			delete_post_meta( $post_id, '_enabled_adv_filtering' );
-			delete_post_meta( $post_id, '_formidable_search_collect_setting' );
+			delete_post_meta( $post_id, '_gfirem_adv_search_collect_setting' );
 			
 			return;
 		}
@@ -97,7 +97,7 @@ class formidable_search_meta_box {
 				$filters[ sanitize_text_field( strval( $field ) ) ] = array( 'filter' => sanitize_text_field( $filter ), 'where' => $this->get_where_val( $field ) );
 			}
 			if ( ! empty( $filters ) ) {
-				update_post_meta( $post_id, '_formidable_search_collect_setting', $filters );
+				update_post_meta( $post_id, '_gfirem_adv_search_collect_setting', $filters );
 			}
 		}
 	}
@@ -108,14 +108,14 @@ class formidable_search_meta_box {
 	public function add_script() {
 		global $current_screen;
 		if ( $current_screen->id == 'frm_display' ) {
-			wp_enqueue_script( 'formidable_search', FSE_JS_PATH . 'formidable_search.js', array( "jquery" ), $this->version, true );
+			wp_enqueue_script( 'gfirem_adv_search', FSE_JS_PATH . 'gfirem_adv_search.js', array( "jquery" ), $this->version, true );
 		}
 	}
 	
 	public function search_filter_query( $where, $args ) {
 		$enabled_adv_filtering = get_post_meta( $args['display']->ID, '_enabled_adv_filtering', true );
 		if ( ! empty( $enabled_adv_filtering ) ) {
-			$data_encoded = get_post_meta( $args['display']->ID, '_formidable_search_collect_setting', true );
+			$data_encoded = get_post_meta( $args['display']->ID, '_gfirem_adv_search_collect_setting', true );
 			if ( ! empty( $data_encoded ) && is_array( $data_encoded ) ) {
 				if ( array_key_exists( $args['where_opt'], $data_encoded ) ) {
 					$where_array = array();

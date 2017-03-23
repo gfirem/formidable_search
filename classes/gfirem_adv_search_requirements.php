@@ -1,7 +1,7 @@
 <?php
 /**
  * @package WordPress
- * @subpackage Formidable, formidable_search
+ * @subpackage Formidable, gfirem_adv_search
  * @author GFireM
  * @copyright 2017
  * @link http://www.gfirem.com
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class formidable_search_requirements extends WP_Requirements {
+class gfirem_adv_search_requirements extends WP_Requirements {
 	
 	public function __construct( $text_domain = 'WP_Requirements' ) {
 		parent::__construct( $text_domain );
@@ -26,7 +26,7 @@ class formidable_search_requirements extends WP_Requirements {
 	function getRequirements() {
 		$requirements                = array();
 		$requirement                 = new WP_PHP_Requirement();
-		$requirement->minimumVersion = '5.2.0';
+		$requirement->minimumVersion = '5.3.0';
 		array_push( $requirements, $requirement );
 		$requirement                 = new WP_WordPress_Requirement();
 		$requirement->minimumVersion = '4.7.2';

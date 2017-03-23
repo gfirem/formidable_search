@@ -1,6 +1,6 @@
 /*
  * @package WordPress
- * @subpackage Formidable, formidable_search
+ * @subpackage Formidable, gfirem_adv_search
  * @author GFireM
  * @copyright 2017
  * @link http://www.gfirem.com

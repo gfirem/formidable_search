@@ -1,4 +1,4 @@
-=== Formidable Advance Search Filters ===
+=== GFireM Advance Search Filters ===
 Contributors: gfirem
 Tags: formidable, formidable view, formidable display, formidable view filter, formidable filter and, formidable filter or
 Requires at least: 4.6.2
