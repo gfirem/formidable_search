@@ -3,7 +3,7 @@ Contributors: gfirem
 Tags: formidable, formidable view, formidable display, formidable view filter, formidable filter and, formidable filter or
 Requires at least: 4.4
 Tested up to: 4.7.3
-Stable tag: 1.0.1
+Stable tag: 1.1.0
 License: Apache License 2.0
 License URI: http://www.apache.org/licenses/
 
