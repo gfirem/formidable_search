@@ -31,9 +31,6 @@ class gfirem_adv_search_requirements extends gfiremRequirements {
 		$requirement                 = new WP_WordPress_Requirement();
 		$requirement->minimumVersion = '4.4';
 		array_push( $requirements, $requirement );
-		$requirement = new WPMU_WordPress_Requirement();
-		$requirement->setIsForMultisite( false );
-		array_push( $requirements, $requirement );
 		$requirement          = new WP_Plugins_Requirement();
 		$requirement->plugins = array(
 			array( 'id' => 'formidable/formidable.php', 'name' => 'Formidable', 'min_version' => '2.0.0' )
