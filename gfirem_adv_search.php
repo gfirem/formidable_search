@@ -5,7 +5,7 @@
  * @wordpress-plugin
  * Plugin Name:       GFireM Advance Search Filters
  * Description:       Formidable advance search filters, set it from the editor view
- * Version:           1.0.0
+ * Version:           1.1.0
  * Author:            gfirem
  * License:           Apache License 2.0
  * License URI:       http://www.apache.org/licenses/
@@ -49,6 +49,7 @@ if ( ! class_exists( 'gfirem_adv_search' ) ) {
 		 */
 		private function __construct() {
 			define( 'FSE_JS_PATH', plugin_dir_url( __FILE__ ) . 'assets/js/' );
+			define( 'FSE_CSS_PATH', plugin_dir_url( __FILE__ ) . 'assets/css/' );
 			define( 'FSE_VIEW_PATH', dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR );
 			define( 'FSE_CLASSES_PATH', dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR );
 			define( 'FSE_INCLUDES_PATH', dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR );

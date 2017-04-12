@@ -20,7 +20,20 @@ class gfirem_adv_search_meta_box {
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
 		add_action( 'save_post_frm_display', array( $this, 'save_meta_boxes_data' ) );
 		add_action( 'admin_footer', array( $this, 'add_script' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_style' ) );
 		add_filter( 'frm_where_filter', array( $this, 'search_filter_query' ), 10, 2 );
+	}
+	
+	/**
+	 * Include styles in admin
+	 *
+	 * @param $hook
+	 */
+	public function enqueue_style($hook) {
+		global $current_screen;
+		if ( $current_screen->id == 'frm_display' ) {
+			wp_enqueue_style( 'gfirem_adv_search', FSE_CSS_PATH . 'gfirem_adv_search.css', array(), $this->version );
+		}
 	}
 	
 	/**
@@ -32,9 +45,9 @@ class gfirem_adv_search_meta_box {
 	public function add_meta_boxes( $post ) {
 		add_meta_box(
 			'gfirem_adv_search_meta_box',
-			__( 'Advance Search Filter', 'gfirem_adv_search-locale' ),
+			__( 'Advance Search Filter & Sort', 'gfirem_adv_search-locale' ),
 			array( $this, 'gfirem_adv_search_meta_box_callback' ),
-			'frm_display', 'side'
+			'frm_display'
 		);
 	}
 	
@@ -67,7 +80,7 @@ class gfirem_adv_search_meta_box {
 	 * @param int $post_id The post ID.
 	 */
 	function save_meta_boxes_data( $post_id ) {
-		if ( ! wp_verify_nonce( $_POST['gfirem_adv_search_metabox_nonce'], 'gfirem_adv_search_metabox_collect_settings' ) ) {
+		if ( !empty($_POST['gfirem_adv_search_metabox_nonce']) && ! wp_verify_nonce( $_POST['gfirem_adv_search_metabox_nonce'], 'gfirem_adv_search_metabox_collect_settings' ) ) {
 			return;
 		}
 		
