@@ -16,7 +16,7 @@ class gfirem_adv_search_admin{
 	
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
-		add_action( 'fs_is_submenu_visible_formidable_search', array( $this, 'handle_sub_menu' ), 10, 2 );
+		add_action( 'fs_is_submenu_visible_gfirem_adv_search', array( $this, 'handle_sub_menu' ), 10, 2 );
 	}
 	
 	public function handle_sub_menu( $is_visible, $menu_id ) {
@@ -31,7 +31,7 @@ class gfirem_adv_search_admin{
 	 * Adding the Admin Page
 	 */
 	public function admin_menu() {
-		add_menu_page( __( 'GFireM Adv. Filter','gfirem_adv_search-locale' ), __( 'GFireM Adv. Filter','gfirem_adv_search-locale' ), 'manage_options', 'gfirem_adv_filter', array( $this, 'screen' ), 'dashicons-search' );
+		add_menu_page( __( 'GFireM Adv. Filter','gfirem_adv_search-locale' ), __( 'GFireM Adv. Filter','gfirem_adv_search-locale' ), 'manage_options', 'gfirem_adv_search', array( $this, 'screen' ), 'dashicons-search' );
 	}
 	
 	public function screen() {

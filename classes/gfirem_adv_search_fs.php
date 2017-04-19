@@ -44,7 +44,7 @@ class gfirem_adv_search_fs {
 			
 			$gfirem_adv_search_fs = fs_dynamic_init( array(
 				'id'                  => '906',
-				'slug'                => 'formidable_search',
+				'slug'                => 'gfirem_adv_search',
 				'type'                => 'plugin',
 				'public_key'          => 'pk_a73d66ca3939d2b76c2bca1d8aa22',
 				'is_premium'          => true,
@@ -52,7 +52,7 @@ class gfirem_adv_search_fs {
 				'has_addons'          => false,
 				'has_paid_plans'      => true,
 				'menu'                => array(
-					'slug'    => 'gfirem_adv_filter',
+					'slug'    => 'gfirem_adv_search',
 					'support' => false,
 				),
 			) );
