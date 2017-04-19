@@ -5,7 +5,7 @@
  * @wordpress-plugin
  * Plugin Name:       GFireM Advance Search Filters
  * Description:       Formidable advance search filters, set it from the editor view
- * Version:           1.1.1
+ * Version:           1.2.0
  * Author:            gfirem
  * License:           Apache License 2.0
  * License URI:       http://www.apache.org/licenses/
@@ -31,9 +31,6 @@ if ( ! defined( 'WPINC' ) ) {
 
 if ( ! class_exists( 'gfirem_adv_search' ) ) {
 	
-	require_once dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . 'gfirem_adv_search_fs.php';
-	new gfirem_adv_search_fs();
-	
 	class gfirem_adv_search {
 		
 		/**
@@ -54,17 +51,10 @@ if ( ! class_exists( 'gfirem_adv_search' ) ) {
 			define( 'FSE_CLASSES_PATH', dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR );
 			define( 'FSE_INCLUDES_PATH', dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR );
 			
-			require_once FSE_INCLUDES_PATH . 'Requirements.php';
-			require_once FSE_CLASSES_PATH . 'gfirem_adv_search_requirements.php';
-			$this->requirements = new gfirem_adv_search_requirements();
-			if ( $this->requirements->satisfied() ) {
-				require_once FSE_CLASSES_PATH . 'gfirem_adv_search_meta_box.php';
-				new gfirem_adv_search_meta_box();
-			} else {
-				$fauxPlugin = new WP_Faux_Plugin( 'GFireM Adv Search', $this->requirements->getResults() );
-				$fauxPlugin->show_result( plugin_basename( __FILE__ ) );
-			}
-			
+			require_once FSE_CLASSES_PATH . 'gfirem_adv_search_admin.php';
+			new gfirem_adv_search_admin();
+			require_once FSE_CLASSES_PATH . 'gfirem_adv_search_meta_box.php';
+			new gfirem_adv_search_meta_box();
 		}
 		
 		/**
@@ -90,5 +80,15 @@ if ( ! class_exists( 'gfirem_adv_search' ) ) {
 		
 	}
 	
-	add_action( 'plugins_loaded', array( 'gfirem_adv_search', 'get_instance' ) );
+	require_once dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'Requirements.php';
+	require_once dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . 'gfirem_adv_search_requirements.php';
+	$gfirem_adv_search_requirements = new gfirem_adv_search_requirements();
+	if ( $gfirem_adv_search_requirements->satisfied() ) {
+		require_once dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . 'gfirem_adv_search_fs.php';
+		new gfirem_adv_search_fs();
+		add_action( 'plugins_loaded', array( 'gfirem_adv_search', 'get_instance' ) );
+	} else {
+		$fauxPlugin = new WP_Faux_Plugin( 'GFireM Adv Search', $gfirem_adv_search_requirements->getResults() );
+		$fauxPlugin->show_result( plugin_basename( __FILE__ ) );
+	}
 }

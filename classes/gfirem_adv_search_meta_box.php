@@ -15,13 +15,47 @@ if ( ! defined( 'WPINC' ) ) {
 class gfirem_adv_search_meta_box {
 	
 	private $version = '1.0.0';
+	private $add_scroll_script = false;
+	private $display_id;
 	
 	public function __construct() {
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
 		add_action( 'save_post_frm_display', array( $this, 'save_meta_boxes_data' ) );
 		add_action( 'admin_footer', array( $this, 'add_script' ) );
+		add_action( 'wp_footer', array( $this, 'add_script' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_style' ) );
 		add_filter( 'frm_where_filter', array( $this, 'search_filter_query' ), 10, 2 );
+		if ( gfirem_adv_search_fs::getFreemius()->is_plan__premium_only( 'professional' ) ) {
+			add_filter( 'frm_filter_view', array( $this, 'filter_view__premium_only' ), 10, 1 );
+			add_filter( 'frm_display_entries_content', array( $this, 'display_entries_content__premium_only' ), 10, 4 );//Pro
+		}
+	}
+	
+	public function filter_view__premium_only( $view ) {
+		$data_encoded = get_post_meta( $view->ID, '_gfirem_adv_search_order_setting', true );
+		if ( ! empty( $data_encoded ) && is_array( $data_encoded ) && is_array( $view->frm_order_by ) ) {
+			foreach ( $view->frm_order_by as $order_key => $order_term ) {
+				if ( array_key_exists( $order_term, $data_encoded ) ) {
+					if ( isset( $_GET[ $data_encoded[ $order_term ] ] ) ) {
+						$custom_order = FrmAppHelper::get_param( $data_encoded[ $order_term ] );
+						if ( ! empty( $custom_order ) && ( $custom_order == 'ASC' || $custom_order == 'DESC' ) ) {
+							$view->frm_order[ $order_key ] = $custom_order;
+						}
+					}
+				}
+			}
+		}
+		
+		return $view;
+	}
+	
+	public function display_entries_content__premium_only( $new_content, $entries, $shortcodes, $display ) {
+		if ( ! empty( $entries ) && count( $entries ) > 0 ) {
+			$this->add_scroll_script = true;
+			$this->display_id        = $display->ID;
+		}
+		
+		return $new_content;
 	}
 	
 	/**
@@ -29,7 +63,7 @@ class gfirem_adv_search_meta_box {
 	 *
 	 * @param $hook
 	 */
-	public function enqueue_style($hook) {
+	public function enqueue_style( $hook ) {
 		global $current_screen;
 		if ( $current_screen->id == 'frm_display' ) {
 			wp_enqueue_style( 'gfirem_adv_search', FSE_CSS_PATH . 'gfirem_adv_search.css', array(), $this->version );
@@ -71,6 +105,20 @@ class gfirem_adv_search_meta_box {
 		if ( ! empty( $data_encoded ) ) {
 			$filters = $data_encoded;
 		}
+		
+		$orders                      = array();
+		$frm_enabled_scroll_to       = '';
+		$frm_enabled_scroll_padding  = '';
+		$frm_enabled_scroll_if_query = '';
+		if ( gfirem_adv_search_fs::getFreemius()->is_plan__premium_only( 'professional' ) ) {
+			$data_encoded = get_post_meta( $post->ID, '_gfirem_adv_search_order_setting', true );
+			if ( ! empty( $data_encoded ) ) {
+				$orders = $data_encoded;
+			}
+			$frm_enabled_scroll_to       = get_post_meta( $post->ID, '_frm_enabled_scroll_to', true );
+			$frm_enabled_scroll_padding  = get_post_meta( $post->ID, '_frm_enabled_scroll_padding', true );
+			$frm_enabled_scroll_if_query = get_post_meta( $post->ID, '_frm_enabled_scroll_if_query', true );
+		}
 		include FSE_VIEW_PATH . 'meta_box.php';
 	}
 	
@@ -80,7 +128,7 @@ class gfirem_adv_search_meta_box {
 	 * @param int $post_id The post ID.
 	 */
 	function save_meta_boxes_data( $post_id ) {
-		if ( !empty($_POST['gfirem_adv_search_metabox_nonce']) && ! wp_verify_nonce( $_POST['gfirem_adv_search_metabox_nonce'], 'gfirem_adv_search_metabox_collect_settings' ) ) {
+		if ( ! empty( $_POST['gfirem_adv_search_metabox_nonce'] ) && ! wp_verify_nonce( $_POST['gfirem_adv_search_metabox_nonce'], 'gfirem_adv_search_metabox_collect_settings' ) ) {
 			return;
 		}
 		
@@ -95,22 +143,47 @@ class gfirem_adv_search_meta_box {
 		if ( ! isset( $_POST['frm_search_enabled'] ) ) {
 			delete_post_meta( $post_id, '_enabled_adv_filtering' );
 			delete_post_meta( $post_id, '_gfirem_adv_search_collect_setting' );
+		} else {
+			update_post_meta( $post_id, '_enabled_adv_filtering', sanitize_text_field( $_POST['frm_search_enabled'] ) );
 			
-			return;
+			if ( ! empty( $_POST['frm_search_field'] ) && is_array( $_POST['frm_search_field'] ) ) {
+				$filters = array();
+				foreach ( $_POST['frm_search_field'] as $field => $filter ) {
+					if ( empty( $field ) || empty( $filter ) ) {
+						continue;
+					}
+					$filters[ sanitize_text_field( strval( $field ) ) ] = array( 'filter' => sanitize_text_field( $filter ), 'where' => $this->get_where_val( $field ) );
+				}
+				if ( ! empty( $filters ) ) {
+					update_post_meta( $post_id, '_gfirem_adv_search_collect_setting', $filters );
+				}
+			}
 		}
 		
-		update_post_meta( $post_id, '_enabled_adv_filtering', sanitize_text_field( $_POST['frm_search_enabled'] ) );
-		
-		if ( ! empty( $_POST['frm_search_field'] ) && is_array( $_POST['frm_search_field'] ) ) {
-			$filters = array();
-			foreach ( $_POST['frm_search_field'] as $field => $filter ) {
-				if ( empty( $field ) || empty( $filter ) ) {
-					continue;
-				}
-				$filters[ sanitize_text_field( strval( $field ) ) ] = array( 'filter' => sanitize_text_field( $filter ), 'where' => $this->get_where_val( $field ) );
+		if ( gfirem_adv_search_fs::getFreemius()->is_plan__premium_only( 'professional' ) ) {
+			if ( ! isset( $_POST['frm_enabled_scroll_to'] ) ) {
+				delete_post_meta( $post_id, '_frm_enabled_scroll_to' );
+				delete_post_meta( $post_id, '_frm_enabled_scroll_padding' );
+				delete_post_meta( $post_id, '_frm_enabled_scroll_if_query' );
+			} else if ( ! empty( $_POST['frm_enabled_scroll_to'] ) &&
+			            ! empty( $_POST['frm_enabled_scroll_padding'] ) && ! empty( $_POST['frm_enabled_scroll_if_query'] )
+			) {
+				update_post_meta( $post_id, '_frm_enabled_scroll_to', sanitize_text_field( $_POST['frm_enabled_scroll_to'] ) );
+				update_post_meta( $post_id, '_frm_enabled_scroll_padding', sanitize_text_field( $_POST['frm_enabled_scroll_padding'] ) );
+				update_post_meta( $post_id, '_frm_enabled_scroll_if_query', sanitize_text_field( $_POST['frm_enabled_scroll_if_query'] ) );
 			}
-			if ( ! empty( $filters ) ) {
-				update_post_meta( $post_id, '_gfirem_adv_search_collect_setting', $filters );
+			
+			if ( ! empty( $_POST['frm_search_order'] ) && is_array( $_POST['frm_search_order'] ) ) {
+				$order = array();
+				foreach ( $_POST['frm_search_order'] as $field => $filter ) {
+					if ( empty( $field ) || empty( $filter ) ) {
+						continue;
+					}
+					$order[ sanitize_text_field( strval( $field ) ) ] = sanitize_text_field( $filter );
+				}
+				if ( ! empty( $order ) ) {
+					update_post_meta( $post_id, '_gfirem_adv_search_order_setting', $order );
+				}
 			}
 		}
 	}
@@ -120,8 +193,25 @@ class gfirem_adv_search_meta_box {
 	 */
 	public function add_script() {
 		global $current_screen;
-		if ( $current_screen->id == 'frm_display' ) {
+		if ( $current_screen->id == 'frm_display' || $this->add_scroll_script ) {
 			wp_enqueue_script( 'gfirem_adv_search', FSE_JS_PATH . 'gfirem_adv_search.js', array( "jquery" ), $this->version, true );
+			$params = array();
+			if ( gfirem_adv_search_fs::getFreemius()->is_plan__premium_only( 'professional' ) ) {
+				$go                 = true;
+				$scroll_to_if_query = get_post_meta( $this->display_id, '_frm_enabled_scroll_if_query', true );
+				if ( ! empty( $scroll_to_if_query ) ) {
+					$go = ( isset( $_GET[ $scroll_to_if_query ] ) );
+				}
+				
+				if ( $this->add_scroll_script && $go ) {
+					wp_enqueue_script( 'animatescroll', FSE_JS_PATH . 'animatescroll.min.js', array( "jquery" ), $this->version, true );
+					if ( ! empty( $this->display_id ) ) {
+						$params['scroll_to']         = get_post_meta( $this->display_id, '_frm_enabled_scroll_to', true );
+						$params['scroll_to_padding'] = get_post_meta( $this->display_id, '_frm_enabled_scroll_padding', true );
+					}
+				}
+			}
+			wp_localize_script( 'gfirem_adv_search', 'gfirem_adv_search', $params );
 		}
 	}
 	
@@ -204,5 +294,20 @@ class gfirem_adv_search_meta_box {
 		}
 		
 		return '';
+	}
+	
+	public static function get_extra_option( $option ) {
+		$result = array(
+			'id'         => __( 'Entry ID', 'formidable' ),
+			'created_at' => __( 'Entry creation date', 'formidable' ),
+			'updated_at' => __( 'Entry update date', 'formidable' ),
+			'rand'       => __( 'Random', 'formidable' ),
+		);
+		
+		if ( empty( $option ) ) {
+			return $result;
+		} else {
+			return $result[ $option ];
+		}
 	}
 }

@@ -1,18 +1,18 @@
 <?php
 /**
- * @package WordPress
+ * @package    WordPress
  * @subpackage Formidable, gfirem_adv_search
- * @author GFireM
- * @copyright 2017
- * @link http://www.gfirem.com
- * @license http://www.apache.org/licenses/
+ * @author     GFireM
+ * @copyright  2017
+ * @link       http://www.gfirem.com
+ * @license    http://www.apache.org/licenses/
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class gfirem_adv_search_requirements extends gfirem_requirements {
+class gfirem_adv_search_requirements extends WP_Requirement {
 	
 	public function __construct( $text_domain = 'gfirem_requirements' ) {
 		parent::__construct( $text_domain );
@@ -35,6 +35,9 @@ class gfirem_adv_search_requirements extends gfirem_requirements {
 		$requirement->plugins = array(
 			array( 'id' => 'formidable/formidable.php', 'name' => 'Formidable', 'min_version' => '2.0.0' )
 		);
+		array_push( $requirements, $requirement );
+		$requirement        = new WP_Class_Requirement();
+		$requirement->class = array( 'FrmProAppController' => 'Need Formidable Pro installed' );
 		array_push( $requirements, $requirement );
 		
 		return $requirements;

@@ -43,18 +43,17 @@ class gfirem_adv_search_fs {
 			require_once dirname( __FILE__ ) . '/../includes/freemius/start.php';
 			
 			$gfirem_adv_search_fs = fs_dynamic_init( array(
-				'id'             => '906',
-				'slug'           => 'formidable_search',
-				'type'           => 'plugin',
-				'public_key'     => 'pk_a73d66ca3939d2b76c2bca1d8aa22',
-				'is_premium'     => false,
-				'has_addons'     => false,
-				'has_paid_plans' => false,
-				'menu'           => array(
-					'first-path' => 'plugins.php',
-					'account'    => false,
-					'contact'    => false,
-					'support'    => false,
+				'id'                  => '906',
+				'slug'                => 'formidable_search',
+				'type'                => 'plugin',
+				'public_key'          => 'pk_a73d66ca3939d2b76c2bca1d8aa22',
+				'is_premium'          => true,
+				'has_premium_version' => true,
+				'has_addons'          => false,
+				'has_paid_plans'      => true,
+				'menu'                => array(
+					'slug'    => 'gfirem_adv_filter',
+					'support' => false,
 				),
 			) );
 		}
@@ -74,5 +73,20 @@ class gfirem_adv_search_fs {
 		}
 		
 		return self::$instance;
+	}
+	
+	public static function get_current_plan() {
+		$site = faa_fs::getFreemius()->get_site();
+		if ( ! empty( $site ) ) {
+			if ( ! empty( $site->plan ) ) {
+				if ( ! empty( $site->plan ) ) {
+					return $site->plan->name;
+				} else {
+					return 'free';
+				}
+			}
+		}
+		
+		return 'free';
 	}
 }
