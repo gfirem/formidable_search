@@ -37,7 +37,7 @@ class gfirem_adv_search_requirements extends WP_Requirement {
 		);
 		array_push( $requirements, $requirement );
 		$requirement        = new WP_Class_Requirement();
-		$requirement->class = array( 'FrmProAppController' => 'Need Formidable Pro installed' );
+		$requirement->class = array( 'FrmProHooksController' => 'Need Formidable Pro installed' );
 		array_push( $requirements, $requirement );
 		
 		return $requirements;
