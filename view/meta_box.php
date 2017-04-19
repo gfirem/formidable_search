@@ -76,7 +76,7 @@ if ( gfirem_adv_search_fs::getFreemius()->is_free_plan() ) {
     </div>
     <div class="frm_enabled_scroll_to_container">
         <strong <?php echo "$go_gro"; ?>><?php _e( 'Set the options to scroll', 'gfirem_adv_search-locale' ); ?></strong><br/>
-        <i><?php _e( 'The selector can be (#selector|.selector) where the scroll be move, if you leave empty not be used. If you leave empty the url parameter the scroll will be trigger always.', 'gfirem_adv_search-locale' ); ?></i>
+        <i><?php _e( 'The selector can be (#selector|.selector) where the scroll be move, if you leave empty not be used. If you leave empty the url parameter the scroll will be trigger always, this can be more than one separated by come (,).', 'gfirem_adv_search-locale' ); ?></i>
         <div class="frm_search_sort_item">
             <table>
                 <tr>

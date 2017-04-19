@@ -200,7 +200,21 @@ class gfirem_adv_search_meta_box {
 				$go                 = true;
 				$scroll_to_if_query = get_post_meta( $this->display_id, '_frm_enabled_scroll_if_query', true );
 				if ( ! empty( $scroll_to_if_query ) ) {
-					$go = ( isset( $_GET[ $scroll_to_if_query ] ) );
+					if ( strpos( $scroll_to_if_query, ',' ) === false ) {
+						$go = ( isset( $_GET[ $scroll_to_if_query ] ) );
+					} else {
+						$params = explode( ',', $scroll_to_if_query );
+						if ( is_array( $params ) ) {
+							$go = false;
+							foreach ( $params as $param ) {
+								if ( isset( $_GET[ trim( $param ) ] ) ) {
+									$go = true;
+									break;
+								}
+							}
+						}
+					}
+					
 				}
 				
 				if ( $this->add_scroll_script && $go ) {
