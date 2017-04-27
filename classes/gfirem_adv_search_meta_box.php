@@ -287,7 +287,7 @@ class gfirem_adv_search_meta_box {
 							$current = current( $where_str_union );
 							$key     = key( $where_str_union );
 							$next    = next( $where_str_union );
-							if ( ( $current == 'OR' ) && ! $open_or ) {
+							if ( ( $current == 'OR' ) && ! $open_or && count( $where_str_union ) > 1 ) {
 								$where_str_final .= ' ( ';
 								$open_or         = true;
 								$open_position   = $i;
@@ -296,9 +296,18 @@ class gfirem_adv_search_meta_box {
 							if ( $i != count( $where_str ) - 1 ) {
 								$where_str_final .= ' ' . $data_encoded[ $key ]['filter'];
 							}
-							if ( ( empty( $next ) && $open_or ) || ( $open_or && $i != $open_position && $i == count( $where_str ) - 1 ) ) {
-								$where_str_final .= ' ) ';
-								$open_or         = false;
+							if ( count( $where_str_union ) > 1 && $open_or && $i != $open_position ) {
+								$close_tag = false;
+								if ( ! empty( $next ) && $next == 'AND' ) {
+									$close_tag = true;
+								}
+								if ( $i == count( $where_str ) - 1 ) {
+									$close_tag = true;
+								}
+								if ( $close_tag ) {
+									$where_str_final .= ' ) ';
+									$open_or         = false;
+								}
 							}
 						}
 						
