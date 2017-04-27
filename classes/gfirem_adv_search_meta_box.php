@@ -34,9 +34,10 @@ class gfirem_adv_search_meta_box {
 		}
 	}
 	
-	public function no_entries_message__premium_only($message, $args){
+	public function no_entries_message__premium_only( $message, $args ) {
 		$this->add_scroll_script = true;
 		$this->display_id        = $args['display']->ID;
+		
 		return $message;
 	}
 	
@@ -263,7 +264,7 @@ class gfirem_adv_search_meta_box {
 							} else {
 								$where_statement['item_id'] = $args['entry_ids'];
 							}
-
+							
 							$new_where['fi.id'] = $field_key;
 							$new_where_key      = 'meta_value ' . ( in_array( FrmField::get_type( $field_key ), array( 'number', 'scale' ) ) ? ' +0 ' : '' ) . FrmDb::append_where_is( $this->get_union_arg( $args['display'], $field_key ) );
 							$new_where[0]       = array( $new_where_key => $this->get_array_of_options( $field_search_value ) );
@@ -295,7 +296,7 @@ class gfirem_adv_search_meta_box {
 							if ( $i != count( $where_str ) - 1 ) {
 								$where_str_final .= ' ' . $data_encoded[ $key ]['filter'];
 							}
-							if ( empty( $next ) || ( $open_or && $i != $open_position && $i == count( $where_str ) - 1 ) ) {
+							if ( ( empty( $next ) && $open_or ) || ( $open_or && $i != $open_position && $i == count( $where_str ) - 1 ) ) {
 								$where_str_final .= ' ) ';
 								$open_or         = false;
 							}
