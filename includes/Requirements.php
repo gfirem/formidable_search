@@ -248,7 +248,7 @@ if ( class_exists( 'WP_Requirement' ) === false ) {
 			function check() {
 				$result = true;
 				foreach ( $this->class as $class_name => $class_error ) {
-					if ( ! class_exists( trim( $class_name, true ) ) ) {
+					if ( ! class_exists( $class_name ) ) {
 						$result = false;
 						array_push( $this->notFound, $class_error );
 					}

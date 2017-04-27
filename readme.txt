@@ -3,7 +3,7 @@ Contributors: gfirem
 Tags: formidable, formidable view, formidable display, formidable view filter, formidable filter and, formidable filter order, formidable scroll view
 Requires at least: 4.4
 Tested up to: 4.7.3
-Stable tag: 1.2.1
+Stable tag: 1.2.2
 License: Apache License 2.0
 License URI: http://www.apache.org/licenses/
 
@@ -28,6 +28,9 @@ Activate the plugin through the 'Plugins' menu in WordPress.
 Head to the 'GFireM Fields' menu item in your admin sidebar to adjust the settings
 
 == Changelog ==
+
+= 1.2.2 =
+ * Improving the query generation. Adding scroll when result is empty
 
 = 1.2.1 =
  * Adding support for multiples url parameters to enabled the scroll

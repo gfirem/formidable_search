@@ -5,7 +5,7 @@
  * @wordpress-plugin
  * Plugin Name:       GFireM Advance Search Filters
  * Description:       Formidable advance search filters, set it from the editor view
- * Version:           1.2.1
+ * Version:           1.2.2
  * Author:            gfirem
  * License:           Apache License 2.0
  * License URI:       http://www.apache.org/licenses/

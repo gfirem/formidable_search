@@ -35,12 +35,14 @@ if ( gfirem_adv_search_fs::getFreemius()->is_free_plan() ) {
 						$name   = strlen( $field->name ) > 15 ? substr( $field->name, 0, 15 ) . "..." : $field->name;
 						$filter = ( ! empty( $filters ) && ! empty( $filters[ $item ] ) ) ? $filters[ $item ]['filter'] : 'AND';
 						echo "$name" . ' [' . esc_html( $field->id ) . '] ';
-						if ( $i != count( $display->frm_where ) ): ?>
-                            <select <?php echo disabled( count( $display->frm_where ), $i, true ); ?> name="frm_search_field[<?php echo esc_attr( $field->id ); ?>]" id="frm_search_field_filter">
-                                <option <?php selected( $filter, 'AND', true ); ?> value="AND"><?php _e( 'AND', 'gfirem_adv_search-locale' ); ?></option>
-                                <option <?php selected( $filter, 'OR', true ); ?> value="OR"><?php _e( 'OR', 'gfirem_adv_search-locale' ); ?></option>
-                            </select>
-						<?php endif; ?>
+						$visible_or_container = '';
+						if ( $i == count( $display->frm_where ) ) {
+							$visible_or_container = "style=display:none;";
+						} ?>
+                        <select <?php echo esc_attr( $visible_or_container ); ?> name="frm_search_field[<?php echo esc_attr( $field->id ); ?>]" id="frm_search_field_filter">
+                            <option <?php selected( $filter, 'AND', true ); ?> value="AND"><?php _e( 'AND', 'gfirem_adv_search-locale' ); ?></option>
+                            <option <?php selected( $filter, 'OR', true ); ?> value="OR"><?php _e( 'OR', 'gfirem_adv_search-locale' ); ?></option>
+                        </select>
 					<?php endforeach; ?>
 				<?php else:
 					_e( 'You need more than one filter.', 'gfirem_adv_search-locale' );
