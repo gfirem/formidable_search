@@ -1,12 +1,3 @@
-/*
- * @package WordPress
- * @subpackage Formidable, formidable_search
- * @author GFireM
- * @copyright 2017
- * @link http://www.gfirem.com
- * @license http://www.apache.org/licenses/
- */
-
 (function ($, undef) {
     var global = this;
 

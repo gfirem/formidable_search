@@ -1,12 +1,10 @@
 <?php
 	/**
- * @package WordPress
- * @subpackage Formidable, formidable_search
- * @author GFireM
- * @copyright 2017
- * @link http://www.gfirem.com
- * @license http://www.apache.org/licenses/
- */
+	 * @package     Freemius
+	 * @copyright   Copyright (c) 2015, Freemius, Inc.
+	 * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+	 * @since       1.0.4
+	 */
 
 	if ( ! defined( 'ABSPATH' ) ) {
 		exit;
@@ -250,6 +248,14 @@
 		define( 'WP_FS__API_CACHE_OPTION_NAME', WP_FS___OPTION_PREFIX . 'api_cache' );
 	}
 	define( 'WP_FS__OPTIONS_OPTION_NAME', WP_FS___OPTION_PREFIX . 'options' );
+
+	/**
+	 * Module types
+	 *
+	 * @since 1.2.2
+	 */
+	define( 'WP_FS__MODULE_TYPE_PLUGIN', 'plugin' );
+	define( 'WP_FS__MODULE_TYPE_THEME', 'theme' );
 
 	/**
 	 * Billing Frequencies

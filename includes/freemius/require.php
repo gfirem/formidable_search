@@ -1,21 +1,19 @@
 <?php
 	/**
- * @package WordPress
- * @subpackage Formidable, formidable_search
- * @author GFireM
- * @copyright 2017
- * @link http://www.gfirem.com
- * @license http://www.apache.org/licenses/
- */
+	 * @package     Freemius
+	 * @copyright   Copyright (c) 2016, Freemius, Inc.
+	 * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+	 * @since       1.1.9
+	 */
 
 	// Configuration should be loaded first.
 	require_once dirname( __FILE__ ) . '/config.php';
+    require_once WP_FS__DIR_INCLUDES . '/fs-core-functions.php';
 
 	// Logger must be loaded before any other.
 	require_once WP_FS__DIR_INCLUDES . '/class-fs-logger.php';
 	require_once WP_FS__DIR_INCLUDES . '/debug/debug-bar-start.php';
 
-	require_once WP_FS__DIR_INCLUDES . '/fs-core-functions.php';
 //		require_once WP_FS__DIR_INCLUDES . '/managers/class-fs-abstract-manager.php';
 	require_once WP_FS__DIR_INCLUDES . '/managers/class-fs-option-manager.php';
 	require_once WP_FS__DIR_INCLUDES . '/managers/class-fs-cache-manager.php';
